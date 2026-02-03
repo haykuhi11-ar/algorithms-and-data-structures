@@ -1,4 +1,4 @@
-# Quick Sort (C)
+# Quick Sort 
 
 Quick Sort is a fast and widely used comparison-based sorting algorithm that uses the **divide and conquer** strategy.
 It works by selecting a **pivot** element and partitioning the array so that:
