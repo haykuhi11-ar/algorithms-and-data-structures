@@ -1,3 +1,6 @@
+import { bubbleSort } from '../../algorithms/sorting/bubbleSort/bubble-sort';
+import {quickSort} from '../../algorithms/sorting/quickSort/quick-sort';
+
 class DynamicArray {
     #arr;
     #size;
@@ -7,6 +10,12 @@ class DynamicArray {
     constructor(cap = 0, fill = 0) {
         if (cap < 0) {
             throw new Error("Capacity must be non-negative");
+        }
+        if (!Number.isInteger(cap)) {
+            throw new Error('cap must be an integer');
+        }
+        if (!Number.isInteger(fill)) {
+            throw new Error('fill must be an integer');
         }
 
         this.#arr = new Array(cap).fill(fill);
@@ -66,6 +75,9 @@ class DynamicArray {
         if (i < 0 || i >= this.#size) {
             throw new Error("Index out of bounds");
         }
+        if (!Number.isInteger(i)) {
+            throw new Error('i must be an integer');
+        }
 
         return this.#arr[i];
     }
@@ -75,18 +87,29 @@ class DynamicArray {
             throw new Error("Index out of bounds");
         }
 
-        if (typeof value !== "number") {
-            throw new Error("Value must be a number");
+        if (!Number.isInteger(i)) {
+            throw new Error('i must be an integer');
+        }
+        if (!Number.isInteger(value)) {
+            throw new Error('value must be an integer');
         }
 
         this.#arr[i] = value;
     }
 
     front() {
+        if (this.empty()) {
+            throw new Error('array is empty');
+        }
+
         return this.at(0);
     }
 
     back() {
+        if (this.empty()) {
+            throw new Error('array is empty');
+        }
+
         return this.at(this.#size - 1);
     }
 
@@ -103,8 +126,8 @@ class DynamicArray {
     /* ================= Modifiers ================= */
 
     pushBack(value) {
-        if (typeof value !== "number") {
-            throw new Error("Value must be a number");
+        if (!Number.isInteger(value)) {
+            throw new Error('value must be an integer');
         }
 
         if (this.#capacity === 0) {
@@ -135,24 +158,23 @@ class DynamicArray {
         if (pos < 0 || pos > this.#size) {
             throw new Error("Inndex out of bounds");
         }
+        if (!Number.isInteger(pos)) {
+            throw new Error('Index must be an integer');
+        }
+        if (!Number.isInteger(value)) {
+            throw new Error('value must be an integer');
+        }
 
         if (this.#size === this.#capacity) {
-            this.#resize(this.#capacity * this.#GROWTH);
+            const cap = this.#capacity === 0 ? 1 : this.#capacity * this.#GROWTH;
+            this.#resize(cap);
         }
-
-        const array = new Array(this.#size + 1);
         
-        for (let i = 0; i < pos; i++){
-            array[i] = this.#arr[i];
+        for (let i = this.#size; i > pos; i--){
+            this.#arr[i] = this.#arr[i - 1];
         }
 
-        array[pos] = value;
-
-        for (let j = pos + 1; j < array.length; j++){
-            array[j] = this.#arr[j];
-        }
-
-        this.#arr = array;
+        this.#arr[pos] = value;
         this.#size++;
     }
 
@@ -170,21 +192,19 @@ class DynamicArray {
     }
 
     #resize(n) {
+        if (n <= 0) {
+            throw new Error('n must be >= 0');
+        }
+
         const newArr = new Array(n);
 
         if (this.#size > n) {
             this.#size = n;
+        }
             
             for (let i = 0; i < this.#size; i++) {
             newArr[i] = this.#arr[i];
             }
-        } else {
-
-            for (let i = 0; i < this.#size; i++) {
-            newArr[i] = this.#arr[i];
-            }
-        }
-
 
         this.#arr = newArr;
         this.#capacity = n;
@@ -271,12 +291,20 @@ class DynamicArray {
     /* ================= High Order ================= */
 
     forEach(fn) {
+        if (typeof fn !== 'function') {
+            throw new TypeError('forEach expects a function');
+        }
+
         for (let i = 0; i < this.#size; i++) {
             fn(this.#arr[i], i, this);
         }
     }
 
     map(fn) {
+        if (typeof fn !== 'function') {
+            throw new TypeError('map expects a function');
+        }
+
         const newArr = new DynamicArray(this.#size);
 
         for (let i = 0; i < this.#size; i++) {
@@ -287,6 +315,10 @@ class DynamicArray {
     }
 
     filter(fn) {
+        if (typeof fn !== 'function') {
+            throw new TypeError('filter expects a function');
+        }
+
         const array = new DynamicArray();
         let j = 0;
         for (let i = 0; i < this.#size; i++) {
@@ -300,12 +332,17 @@ class DynamicArray {
     }
 
     reduce(fn, initial) {
+        if (typeof fn !== 'function') {
+            throw new TypeError('reduce expects a function');
+        }
+
         if (this.empty() && initial === undefined) {
             throw new Error("Cannot reduce empty array without initial value");
         }
 
         let acc;
         let i;
+
         if (initial !== undefined) {
            acc = initial;
            i = 0;
@@ -323,38 +360,58 @@ class DynamicArray {
     }
 
     some(fn) {
+        if (typeof fn !== 'function') {
+            throw new TypeError('some expects a function');
+        }
+
         for (let i = 0; i < this.#size; i++) {
             if (fn(this.#arr[i], i, this)) {
                 return true;
             }
         }
+
         return false;
     }
 
     every(fn) {
+        if (typeof fn !== 'function') {
+            throw new TypeError('every expects a function');
+        }
+
         for (let j = 0; j < this.#size; j++) {
             if (!(fn(this.#arr[j], j, this))) {
                 return false;
             }
         }
+
         return true;
     }
 
     find(fn) {
+        if (typeof fn !== 'function') {
+            throw new TypeError('find expects a function');
+        }
+
         for (let i = 0; i < this.#size; i++) {
             if (fn(this.#arr[i], i, this)) {
                 return this.#arr[i];
             }
         }
+
         return undefined;
     }
 
     findIndex(fn) {
+        if (typeof fn !== 'function') {
+            throw new TypeError('findIndex expects a function');
+        }
+
         for (let i = 0; i < this.#size; i++) {
             if (fn(this.#arr[i], i, this)) {
                 return i;
             }
         }
+
         return -1;
     }
 
@@ -364,6 +421,7 @@ class DynamicArray {
                 return true;
             }
         }
+        
         return false;
     }
 
@@ -371,22 +429,19 @@ class DynamicArray {
 
     reverse() {
         for (let i = 0, j = this.#size - 1; i < j; i++, j--) {
-            [this.#arr[i], this.#arr[j]] = [this.#arr[j], this.#arr[i]];
+            this.swap(i, j);
         }
     }
 
     sort(compareFn) {
-        if (this.#size <= 1) return;
+        compareFn = typeof compareFn === 'function' ? compareFn : (a, b) => a - b;
         
-        for (let i = 0; i < this.#size - 1; i++) {
-            let flag = false;
-            for (let j = 0; j < this.#size - i - 1; j++) {
-                if (compareFn(this.#arr[j], this.#arr[j + 1]) > 0) {
-                    [this.#arr[j], this.#arr[j + 1]] = [this.#arr[j + 1], this.#arr[j]];
-                    flag = true;
-                }
-            }
-            if (!flag) break;
+        if (this.#size <= 1) return;
+
+        if (this.#size <= 100) {
+            bubbleSort(this.#arr, compareFn);
+        } else {
+            quickSort(this.#arr, 0, this.#size - 1, compareFn);
         }
     }
 

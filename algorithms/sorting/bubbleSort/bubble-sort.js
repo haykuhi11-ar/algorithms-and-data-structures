@@ -1,8 +1,10 @@
-function bubbleSort(array) {
-    for(let i = 0; i < array.length - 1; ++i) {
+export function bubbleSort(array, compareFn = (a, b) => a - b) {
+    const size = array.length;
+    for(let i = 0; i < size - 1; ++i) {
         let f = false;
-        for(let j = 0; j < array.length - i - 1; ++j) {
-            if (array[j] > array[j + 1]) {
+
+        for(let j = 0; j < size - i - 1; ++j) {
+            if (compareFn(array[j], array[j + 1]) > 0) {
                 [array[j], array[j + 1]] = [array[j + 1], array[j]];
                 f = true;
             }
