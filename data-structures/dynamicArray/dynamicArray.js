@@ -1,5 +1,5 @@
-import { bubbleSort } from '../../algorithms/sorting/bubbleSort/bubble-sort';
-import {quickSort} from '../../algorithms/sorting/quickSort/quick-sort';
+import { bubbleSort } from '../../algorithms/sorting/bubbleSort/bubble-sort.js';
+import {quickSort} from '../../algorithms/sorting/quickSort/quick-sort.js';
 
 class DynamicArray {
     #arr;
