@@ -250,7 +250,8 @@ class DynamicArray {
                     value: this.#arr[index++],
                     done: false,
                 };
-            }
+            },
+            [Symbol.iterator]() {return this}
         };
     }
 
@@ -267,8 +268,9 @@ class DynamicArray {
                     value: index++,
                     done: false,
                 }
-            }
-        }
+            },
+            [Symbol.iterator]() {return this}
+        };
     }
 
     entries() {
@@ -284,7 +286,8 @@ class DynamicArray {
                     value: [index, this.#arr[index++]],
                     done: false,
                 };
-            }
+            },
+            [Symbol.iterator]() {return this}
         };
     }
 
