@@ -323,7 +323,8 @@ class BST {
                         done: true
                     };
                 }
-            }
+            },
+            [Symbol.iterator]() {return this}
         };
     }
 
@@ -344,7 +345,8 @@ class BST {
                         done: true
                     };
                 }
-            }
+            },
+            [Symbol.iterator]() {return this}
         };
     }
 
@@ -410,7 +412,7 @@ class BST {
     }
 
     #_inorder(node, result) {
-        if (!node) return result;
+        if (!node) return [];
         this.#_inorder(node.left, result);
         result.push(node.value);
         this.#_inorder(node.right, result);
@@ -418,16 +420,18 @@ class BST {
     }
 
     #_preorder(node, result) {
-        if (!node) return;
+        if (!node) return [];
         result.push(node.value);
         this.#_preorder(node.left, result);
         this.#_preorder(node.right, result);
+        return result;
     }
 
     #_postorder(node, result) {
-        if (!node) return;
+        if (!node) return [];
         this.#_postorder(node.left, result);
         this.#_postorder(node.right, result);
         result.push(node.value);
+        return result;
     }
 }
