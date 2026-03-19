@@ -225,7 +225,7 @@ class BST {
         const right = this.#_get_height(node.right);
 
         if (Math.abs(left - right) > 1) return false;
-        return this.#_get_height(node.left) && this.#_get_height(node.right);
+        return this.is_balanced(node.left) && this.is_balanced(node.right);
     }
 
     /* ================= Utilities ================= */
